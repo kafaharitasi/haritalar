@@ -1,0 +1,72 @@
+/* Kafa Haritası · ortak stil (harita.kafaharitasi.com)
+   Yazı: Bricolage Grotesque, SIL Open Font License 1.1 (ortak/OFL.txt). Sunucumuzdan yüklenir; üçüncü tarafa istek yok. */
+@font-face {
+  font-family: "Bricolage";
+  src: url("bricolage-500.woff2") format("woff2");
+  font-weight: 400 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Bricolage";
+  src: url("bricolage-800.woff2") format("woff2");
+  font-weight: 700 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --kagit: #EFE6D2;
+  --kart: #F8F3E8;
+  --murekkep: #171717;
+  --meta: #5A5244;
+  --altin: #7A5604;
+  --pas: #9C3A23;
+  --cizgi: #B8A67C;
+  --deniz: #C2D8DD;
+  --komsu: #E6DCC4;
+  --fay: #B5442A;
+  --deprem: #E0A515;
+  --font: "Bricolage", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: light;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--kagit);
+  color: var(--murekkep);
+  font-family: var(--font);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.55;
+}
+a { color: var(--pas); text-underline-offset: 2px; }
+a:hover { color: var(--murekkep); }
+:focus-visible { outline: 2.5px solid var(--murekkep); outline-offset: 2px; }
+button, input, select { font: inherit; color: inherit; }
+
+.etiket {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+  color: var(--altin);
+}
+.meta {
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+  color: var(--meta);
+}
+.ikon { width: 1em; height: 1em; flex: none; display: inline-block; vertical-align: -0.125em; }
+.gizli {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

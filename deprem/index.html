@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'none'; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>Faylar ve depremler · Kafa Haritası</title>
+<meta name="description" content="Türkiye'nin diri fay izleri ve 2015–2025 arasındaki M5,5 ve üzeri depremler. Kafa Haritası Bölüm 1'in etkileşimli haritası.">
+<link rel="preload" href="../ortak/bricolage-500.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../ortak/kh.css">
+<link rel="stylesheet" href="harita.css">
+</head>
+<body>
+<main class="sayfa">
+  <div class="ust">
+    <h1 class="etiket">Şekil 1 · Faylar ve depremler</h1>
+    <a class="tam-sayfa" id="tam-sayfa" href="./" target="_blank" rel="noopener" hidden>Tam sayfada aç<svg class="ikon" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3h7v7M13 3 4 12" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></a>
+  </div>
+
+  <div class="arac">
+    <div class="alan alan-il">
+      <label for="il-ara" class="meta">İlinizi bulun</label>
+      <input id="il-ara" type="search" list="il-liste" placeholder="ör. Malatya" autocomplete="off" enterkeyhint="search" spellcheck="false">
+      <datalist id="il-liste"></datalist>
+    </div>
+    <div class="alan alan-deprem">
+      <label for="deprem-sec" class="meta">Deprem seçin</label>
+      <select id="deprem-sec"></select>
+    </div>
+    <fieldset class="katman">
+      <legend class="meta">Katmanlar</legend>
+      <label><input type="checkbox" id="k-fay" checked> Diri faylar</label>
+      <label><input type="checkbox" id="k-deprem" checked> Depremler</label>
+      <label><input type="checkbox" id="k-il" checked> İl sınırları</label>
+    </fieldset>
+  </div>
+
+  <div class="govde">
+    <figure class="sekil">
+      <div class="cerceve" id="cerceve" tabindex="0" aria-describedby="klavye-ipucu">
+        <svg id="svg" viewBox="0 0 1000 500" role="img" aria-labelledby="svg-baslik" xmlns="http://www.w3.org/2000/svg">
+          <title id="svg-baslik">Türkiye haritası: GEM diri fay izleri, il sınırları ve 2015–2025 arasındaki M5,5 ve üzeri depremler</title>
+          <rect id="deniz" width="1000" height="500"/>
+          <g id="k-su"></g>
+          <path id="komsular"/>
+          <path id="turkiye"/>
+          <g id="iller"></g>
+          <path id="turkiye-kiyi"/>
+          <path id="goller"/>
+          <path id="izgara"/>
+          <g id="faylar"></g>
+          <g id="fay-isabet"></g>
+          <path id="il-secili"/>
+          <g id="yazilar"></g>
+          <g id="depremler"></g>
+          <g id="secim"></g>
+        </svg>
+        <div class="zoom" role="group" aria-label="Yakınlaştırma">
+          <button type="button" id="yak" aria-label="Yakınlaştır"><svg class="ikon" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2"/></svg></button>
+          <button type="button" id="uzak" aria-label="Uzaklaştır"><svg class="ikon" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h12" stroke="currentColor" stroke-width="2"/></svg></button>
+          <button type="button" id="sifirla" aria-label="Bütün Türkiye'yi göster"><svg class="ikon" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 6V2h4M10 2h4v4M14 10v4h-4M6 14H2v-4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button>
+        </div>
+        <div class="olcek" id="olcek" aria-hidden="true"><span class="olcek-cubuk" id="olcek-cubuk"></span><span id="olcek-yazi">200 km</span></div>
+        <div class="ipucu" id="ipucu" role="status" hidden></div>
+      </div>
+      <p class="gizli" id="klavye-ipucu">Ok tuşlarıyla kaydırın, artı ve eksi tuşlarıyla yakınlaştırın. Depremleri listeden seçebilirsiniz.</p>
+      <div class="lejant" aria-label="Lejant">
+        <span class="l-oge"><svg viewBox="0 0 28 10" aria-hidden="true"><path d="M1 7 9 3l8 3 10-4" fill="none" stroke="#B5442A" stroke-width="1.6"/></svg>Diri fay izi (GEM)</span>
+        <span class="l-oge"><svg viewBox="0 0 46 16" aria-hidden="true"><circle cx="4" cy="8" r="3" fill="#E0A515" fill-opacity=".75" stroke="#171717" stroke-width=".8"/><circle cx="15" cy="8" r="5" fill="#E0A515" fill-opacity=".75" stroke="#171717" stroke-width=".8"/><circle cx="32" cy="8" r="7.5" fill="#E0A515" fill-opacity=".75" stroke="#171717" stroke-width=".8"/></svg>Deprem, M5,5 · 6,5 · 7,5 (USGS, 2015–2025)</span>
+        <span class="l-oge"><svg viewBox="0 0 28 10" aria-hidden="true"><path d="M1 5h26" stroke="#B8A67C" stroke-width="1.2"/></svg>İl sınırı (OSM)</span>
+      </div>
+    </figure>
+
+    <aside class="kart" id="kart" aria-live="polite" aria-atomic="true"></aside>
+  </div>
+
+  <p class="atif">Faylar: <a href="https://github.com/GEMScienceTools/gem-global-active-faults" target="_blank" rel="noopener">GEM Global Active Faults</a> (Styron ve Pagani 2020), CC BY-SA 4.0 · Depremler: <a href="https://earthquake.usgs.gov/earthquakes/search/" target="_blank" rel="noopener">USGS ANSS ComCat</a> · Kıyı ve ülke sınırları: Natural Earth · İl sınırları: <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap katkıcıları</a> (geoBoundaries), ODbL · Harita deprem tehlikesini göstermez; deprem tahmini yapmaz.</p>
+</main>
+<script src="veri.js"></script>
+<script src="harita.js"></script>
+</body>
+</html>

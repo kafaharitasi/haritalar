@@ -1,0 +1,53 @@
+/* Rıza onaylı YouTube oynatıcı: YouTube yalnız "Videoyu oynat"a basınca yüklenir. */
+html, body { height: 100%; }
+body { background: var(--murekkep); overflow: hidden; }
+.oynatici { position: fixed; inset: 0; background: var(--murekkep); color: var(--kagit); }
+.kapak, .yedek, .ortu, .oynatici iframe { position: absolute; inset: 0; width: 100%; height: 100%; }
+.kapak { object-fit: cover; display: block; }
+.kapak[hidden], .yedek[hidden] { display: none; }
+.yedek {
+  display: grid; place-items: center;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 39px, rgba(239, 230, 210, .06) 39px 40px),
+    repeating-linear-gradient(90deg, transparent 0 39px, rgba(239, 230, 210, .06) 39px 40px),
+    var(--murekkep);
+}
+.marka { font-weight: 800; font-size: clamp(22px, 6vw, 56px); letter-spacing: -.01em; color: var(--kagit); opacity: .9; transform: translateY(-18%); }
+.ortu {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+  padding: 16px;
+  background: linear-gradient(180deg, rgba(23, 23, 23, .10) 0%, rgba(23, 23, 23, .35) 55%, rgba(23, 23, 23, .82) 100%);
+}
+.oynat {
+  display: inline-flex; align-items: center; gap: 12px;
+  background: var(--murekkep); color: var(--kagit);
+  border: 1.5px solid var(--kagit); border-radius: 2px;
+  padding: 10px 20px 10px 12px; min-height: 48px;
+  font-weight: 800; font-size: 18px; cursor: pointer;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, .35);
+}
+.oynat:hover, .oynat:focus-visible { background: var(--deprem); color: var(--murekkep); border-color: var(--murekkep); }
+.oynat:focus-visible { outline: 2.5px solid var(--kagit); outline-offset: 3px; }
+.daire { width: 34px; height: 34px; border-radius: 50%; background: var(--deprem); color: var(--murekkep); display: grid; place-items: center; }
+.oynat:hover .daire, .oynat:focus-visible .daire { background: var(--murekkep); color: var(--deprem); }
+.daire svg { width: 20px; height: 20px; }
+.bilgi {
+  position: absolute; left: 0; right: 0; bottom: 0; margin: 0;
+  padding: 10px 16px 12px; text-align: center;
+  font-size: 12.5px; line-height: 1.45; color: var(--kagit);
+}
+.bilgi a { color: var(--kagit); }
+.bilgi a:hover { color: var(--deprem); }
+.hata { max-width: 34ch; text-align: center; font-size: 16px; }
+
+@media (max-width: 480px), (max-height: 260px) {
+  .oynat { font-size: 15px; min-height: 42px; padding: 6px 14px 6px 8px; gap: 9px; }
+  .daire { width: 28px; height: 28px; }
+  .daire svg { width: 16px; height: 16px; }
+  .bilgi { font-size: 10.5px; padding: 6px 10px 8px; }
+}
+@media (max-height: 200px) {
+  .bilgi { font-size: 9.5px; padding: 4px 8px 5px; }
+  .ortu { justify-content: flex-start; padding-top: 18%; }
+}
+.oynatici iframe { border: 0; display: block; }

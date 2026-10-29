@@ -1,0 +1,13 @@
+.giris { max-width: 760px; margin: 0 auto; padding: 48px 16px 40px; }
+.giris h1 { margin: 8px 0 10px; font-weight: 800; font-size: clamp(28px, 5vw, 42px); line-height: 1.12; }
+.aciklama { margin: 0 0 24px; max-width: 60ch; }
+.liste { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.liste a {
+  display: flex; flex-direction: column; gap: 4px;
+  padding: 16px 18px; background: var(--kart); border: 1.5px solid var(--murekkep);
+  color: var(--murekkep); text-decoration: none;
+}
+.liste a:hover { background: var(--murekkep); color: var(--kagit); }
+.liste a:hover .meta { color: var(--deprem); }
+.liste .ad { font-weight: 800; font-size: 22px; line-height: 1.2; }
+.alt { margin-top: 32px; font-size: 14px; color: var(--meta); }

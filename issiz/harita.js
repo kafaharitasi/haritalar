@@ -173,7 +173,7 @@
     kart.innerHTML =
       '<p class="etiket">81 il</p>' +
       '<h2>Bir il seçin</h2>' +
-      '<p>Haritadaki noktalardan birine ya da aşağıdaki listede bir ilin adına tıklayın. Harita o ilin en ıssız noktasına gider; koordinatı burada görürsünüz.</p>' +
+      '<p>Haritadaki noktalardan birine tıklayın ya da haritanın altındaki kutudan bir il seçin. Harita o ilin en ıssız noktasına gider; koordinatı burada görürsünüz.</p>' +
       '<p class="kucuk">Noktalar yaklaşık yerdir (90 m\'lik hesap hücresinin merkezi).</p>';
   }
   function kartYaz(n) {
@@ -233,6 +233,8 @@
     git({ x: n.x - w / 2, y: n.y - w * H / W / 2, w: w }, o.hemen);
     kartYaz(n);
     satirlar.forEach(function (s) { s.btn.setAttribute('aria-current', s.n === n ? 'true' : 'false'); });
+    secKutu.value = n.slug;
+    tamSayfa.href = './#' + n.slug;
     if (history.replaceState) history.replaceState(null, '', '#' + n.slug);
     if (o.kaydir) {
       var r = cerceve.getBoundingClientRect();
@@ -249,11 +251,29 @@
     secimAd.el.style.display = 'none';
     noktalar.forEach(function (x) { x.ad.el.style.display = ''; });
     satirlar.forEach(function (s) { s.btn.setAttribute('aria-current', 'false'); });
+    secKutu.value = '';
+    tamSayfa.href = './';
     bosKart();
     if (history.replaceState) history.replaceState(null, '', location.pathname + location.search);
   }
 
-  /* ---------- liste ---------- */
+  /* ---------- il seçme kutusu (haritanın altında, kapalı açılır liste) ---------- */
+  var secKutu = $('il-sec'), tamSayfa = $('tam-sayfa');
+  noktalar.forEach(function (n) {
+    var op = document.createElement('option');
+    op.value = n.slug;
+    op.textContent = n.il;
+    secKutu.appendChild(op);
+  });
+  secKutu.addEventListener('change', function () {
+    var v = secKutu.value;
+    var n = v && noktalar.filter(function (x) { return x.slug === v; })[0];
+    if (n) sec(n);
+    else { temizle(); git({ x: 0, y: 0, w: W }); }
+  });
+  if (document.documentElement.classList.contains('gomulu')) tamSayfa.hidden = false;
+
+  /* ---------- liste (varsayılan kapalı) ---------- */
   var ol = $('il-liste');
   noktalar.forEach(function (n) {
     var li = document.createElement('li');

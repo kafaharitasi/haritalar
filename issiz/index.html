@@ -10,13 +10,14 @@
 <link rel="preload" href="../ortak/bricolage-800.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../ortak/kh.css">
 <link rel="stylesheet" href="harita.css">
+<script src="gom.js"></script>
 </head>
 <body>
 <main class="sayfa">
   <header class="bas">
     <p class="etiket">Kafa Haritası · Bölüm 05 · 81 il</p>
     <h1>Her İlin En Issız Noktası</h1>
-    <p class="giris-metni">Her ilde, en yakın insana yürümenin en uzun sürdüğü yer. Haritadaki bir noktaya ya da aşağıdaki listede bir ile tıklayın; harita o noktaya gider.</p>
+    <p class="giris-metni">Her ilde, en yakın insana yürümenin en uzun sürdüğü yer. Haritadaki bir noktaya tıklayın ya da haritanın altındaki kutudan bir il seçin; harita o noktaya gider.</p>
   </header>
 
   <div class="govde">
@@ -48,7 +49,14 @@
         <div class="balon" id="balon" hidden></div>
         <div class="ipucu" id="ipucu" role="status" hidden></div>
       </div>
-      <p class="gizli" id="klavye-ipucu">Ok tuşlarıyla kaydırın, artı ve eksi tuşlarıyla yakınlaştırın. İlleri haritanın altındaki listeden seçebilirsiniz.</p>
+      <p class="gizli" id="klavye-ipucu">Ok tuşlarıyla kaydırın, artı ve eksi tuşlarıyla yakınlaştırın. İlleri haritanın altındaki kutudan seçebilirsiniz.</p>
+      <div class="il-sec">
+        <label for="il-sec" class="il-sec-etiket">İl seçin</label>
+        <select id="il-sec">
+          <option value="">81 il · listeden bir il seçin</option>
+        </select>
+        <a class="tam-sayfa" id="tam-sayfa" href="./" target="_blank" rel="noopener" hidden>Tam sayfada aç<svg class="ikon" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3h7v7M13 3 4 12" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></a>
+      </div>
       <div class="lejant" aria-label="Lejant">
         <span class="l-oge"><svg viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="4.5" fill="#E0A515" stroke="#171717" stroke-width="1.2"/></svg>İlin en ıssız noktası (yaklaşık yer)</span>
         <span class="l-oge"><svg viewBox="0 0 28 10" aria-hidden="true"><path d="M1 5h26" stroke="#B8A67C" stroke-width="1.2"/></svg>İl sınırı (OSM)</span>
@@ -58,9 +66,9 @@
     <aside class="kart" id="kart" aria-live="polite" aria-atomic="true"></aside>
   </div>
 
-  <section class="liste-bolum" aria-labelledby="liste-baslik">
+  <details class="liste-bolum" id="liste-bolum">
+    <summary><span id="liste-baslik">81 ilin listesi</span><span class="liste-ac-yazi" aria-hidden="true"><span class="ac">Aç</span><span class="kapat">Kapat</span><svg class="ikon ok" viewBox="0 0 16 16"><path d="M3 6l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2"/></svg></span></summary>
     <div class="liste-ust">
-      <h2 id="liste-baslik">81 il</h2>
       <div class="alan">
         <label for="il-ara" class="meta">İl ara</label>
         <input id="il-ara" type="search" placeholder="ör. Mersin" autocomplete="off" enterkeyhint="search" spellcheck="false">
@@ -69,7 +77,7 @@
     <p class="meta liste-not">İl · ilçe · en yakın insana yürüme süresi · koordinat (enlem, boylam)</p>
     <ol class="il-liste" id="il-liste"></ol>
     <p class="bos" id="bos" hidden>Bu adla bir il bulamadık.</p>
-  </section>
+  </details>
 
   <section class="notlar" aria-labelledby="not-baslik">
     <h2 id="not-baslik">Bu noktalar nedir?</h2>

@@ -3,26 +3,92 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'none'; style-src 'self'; img-src 'self'; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
-<title>Haritalar · Kafa Haritası</title>
-<meta name="description" content="Kafa Haritası bölümlerinin etkileşimli haritaları.">
-<link rel="stylesheet" href="ortak/kh.css">
-<link rel="stylesheet" href="ortak/giris.css">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'none'; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>Her İlin En Issız Noktası · Kafa Haritası</title>
+<meta name="description" content="81 ilin her birinde en yakın insana yürümenin en uzun sürdüğü yer: harita ve koordinat listesi. Kafa Haritası Bölüm 05.">
+<link rel="preload" href="../ortak/bricolage-800.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../ortak/kh.css">
+<link rel="stylesheet" href="harita.css">
+<script src="gom.js"></script>
 </head>
 <body>
-<main class="giris">
-  <p class="etiket">Kafa Haritası · Haritalar</p>
-  <h1>Bölümlerin etkileşimli haritaları</h1>
-  <p class="aciklama">Her harita, ait olduğu bölümün sayfasında da gömülü durur. Kaynaklar ve yöntem bölüm sayfalarındadır.</p>
-  <ul class="liste">
-    <li>
-      <a href="deprem/"><span class="meta">Bölüm 01 · Yerin Altı</span><span class="ad">Faylar ve depremler</span></a>
-    </li>
-    <li>
-      <a href="issiz/"><span class="meta">Bölüm 05 · 81 il</span><span class="ad">Her ilin en ıssız noktası</span></a>
-    </li>
-  </ul>
-  <p class="alt"><a href="https://www.kafaharitasi.com" rel="noopener">kafaharitasi.com</a> · Bu sayfalar çerez kullanmaz ve üçüncü taraf sunuculara istek göndermez.</p>
+<main class="sayfa">
+  <header class="bas">
+    <p class="etiket">Kafa Haritası · Bölüm 05 · 81 il</p>
+    <h1>Her İlin En Issız Noktası</h1>
+    <p class="giris-metni">Her ilde, en yakın insana yürümenin en uzun sürdüğü yer. Haritadaki bir noktaya tıklayın ya da haritanın altındaki kutudan bir il seçin; harita o noktaya gider.</p>
+  </header>
+
+  <div class="govde">
+    <figure class="sekil" id="sekil">
+      <div class="cerceve" id="cerceve" tabindex="0" aria-describedby="klavye-ipucu">
+        <svg id="svg" viewBox="0 0 1000 500" role="img" aria-labelledby="svg-baslik" xmlns="http://www.w3.org/2000/svg">
+          <title id="svg-baslik">Türkiye haritası: 81 ilin en ıssız noktası</title>
+          <rect id="deniz" width="1000" height="500"/>
+          <g id="k-su"></g>
+          <path id="komsular"/>
+          <path id="komsu-ek"/>
+          <g id="kara-kiyi"></g>
+          <g id="kara"></g>
+          <path id="goller"/>
+          <g id="iller"></g>
+          <path id="il-secili"/>
+          <path id="izgara"/>
+          <g id="yazilar"></g>
+          <g id="noktalar"></g>
+          <g id="adlar"></g>
+          <g id="secim"></g>
+        </svg>
+        <div class="zoom" role="group" aria-label="Yakınlaştırma">
+          <button type="button" id="yak" aria-label="Yakınlaştır"><svg class="ikon" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2"/></svg></button>
+          <button type="button" id="uzak" aria-label="Uzaklaştır"><svg class="ikon" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h12" stroke="currentColor" stroke-width="2"/></svg></button>
+          <button type="button" id="sifirla" aria-label="Bütün Türkiye'yi göster"><svg class="ikon" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 6V2h4M10 2h4v4M14 10v4h-4M6 14H2v-4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button>
+        </div>
+        <div class="olcek" id="olcek" aria-hidden="true"><span class="olcek-cubuk" id="olcek-cubuk"></span><span id="olcek-yazi">200 km</span></div>
+        <div class="balon" id="balon" hidden></div>
+        <div class="ipucu" id="ipucu" role="status" hidden></div>
+      </div>
+      <p class="gizli" id="klavye-ipucu">Ok tuşlarıyla kaydırın, artı ve eksi tuşlarıyla yakınlaştırın. İlleri haritanın altındaki kutudan seçebilirsiniz.</p>
+      <div class="il-sec">
+        <label for="il-sec" class="il-sec-etiket">İl seçin</label>
+        <select id="il-sec">
+          <option value="">81 il · listeden bir il seçin</option>
+        </select>
+        <a class="tam-sayfa" id="tam-sayfa" href="./" target="_blank" rel="noopener" hidden>Tam sayfada aç<svg class="ikon" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3h7v7M13 3 4 12" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></a>
+      </div>
+      <div class="lejant" aria-label="Lejant">
+        <span class="l-oge"><svg viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="4.5" fill="#E0A515" stroke="#171717" stroke-width="1.2"/></svg>İlin en ıssız noktası (yaklaşık yer)</span>
+        <span class="l-oge"><svg viewBox="0 0 28 10" aria-hidden="true"><path d="M1 5h26" stroke="#B8A67C" stroke-width="1.2"/></svg>İl sınırı (OSM)</span>
+      </div>
+    </figure>
+
+    <aside class="kart" id="kart" aria-live="polite" aria-atomic="true"></aside>
+  </div>
+
+  <details class="liste-bolum" id="liste-bolum">
+    <summary><span id="liste-baslik">81 ilin listesi</span><span class="liste-ac-yazi" aria-hidden="true"><span class="ac">Aç</span><span class="kapat">Kapat</span><svg class="ikon ok" viewBox="0 0 16 16"><path d="M3 6l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2"/></svg></span></summary>
+    <div class="liste-ust">
+      <div class="alan">
+        <label for="il-ara" class="meta">İl ara</label>
+        <input id="il-ara" type="search" placeholder="ör. Mersin" autocomplete="off" enterkeyhint="search" spellcheck="false">
+      </div>
+    </div>
+    <p class="meta liste-not">İl · ilçe · en yakın insana yürüme süresi · koordinat (enlem, boylam)</p>
+    <ol class="il-liste" id="il-liste"></ol>
+    <p class="bos" id="bos" hidden>Bu adla bir il bulamadık.</p>
+  </details>
+
+  <section class="notlar" aria-labelledby="not-baslik">
+    <h2 id="not-baslik">Bu noktalar nedir?</h2>
+    <p>Her nokta, o ilin içinde en yakın insana yürümenin en uzun sürdüğü yerdir. Süreler yaklaşıktır: 2 saate kadar 5 dakikaya, üstünde 10 dakikaya yuvarlandı. "İnsan", GHSL 2025 nüfus modelinde en az 1 kişinin yaşadığı 100 metrelik hücredir; yaylalar sayılmaz (kış hâli). Yürüme süresi Tobler'in (1993) yürüyüş hızıyla, Copernicus GLO-90 yükseklik modeli ve OpenStreetMap yol ve patikalarıyla, 90 metrelik ızgarada hesaplandı. En yakın insan komşu ilde de olabilir.</p>
+    <p>Koordinatlar yaklaşık yeri gösterir: 90 metrelik hesap hücresinin merkezi. Kara sınırı boyundaki 5 km'lik şeritte ve askerî alanların çevresinde nokta verilmez; Adana ve Kırklareli'de bu bölgelerin dışındaki en ıssız nokta gösterilir. Tekirdağ ve Samsun noktaları, uydu görüntüsüyle yapılan kontrolden sonra baraj gölü kıyısına alındı. Ankara ve Aksaray noktaları Tuz Gölü yatağındadır. Bazı komşu illerin noktaları ortak sınırdaki aynı dağ sırtında, birbirine bir iki kilometre uzaklıktadır.</p>
+    <p class="uyari"><strong>Güvenlik:</strong> Bu noktaların çoğu sarp, yolsuz ve susuz yerlerdir; 17'si millî park, yaban hayatı geliştirme sahası ya da özel çevre koruma bölgesi içindedir (ilin kartında yazılı). Bu liste bir gezi önerisi değildir. Doğaya çıkacaksanız yalnız gitmeyin, nereye gittiğinizi birine haber verin.</p>
+  </section>
+
+  <p class="atif">Noktalar: Kafa Haritası Bölüm 05 hesabı · Nüfus: GHSL (Avrupa Komisyonu JRC) · Yükseklik: Copernicus DEM GLO-90 (© DLR e.V. 2010–2014 ve © Airbus Defence and Space GmbH 2014–2018; Avrupa Birliği ve ESA tarafından Copernicus kapsamında sağlanmıştır) · Yollar, patikalar ve il sınırları: <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap katkıcıları</a> (il sınırları geoBoundaries üzerinden), ODbL · Komşu ülkeler ve göller: Natural Earth</p>
 </main>
+<script src="veri.js"></script>
+<script src="harita.js"></script>
 </body>
 </html>

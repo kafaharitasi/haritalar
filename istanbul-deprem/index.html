@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'none'; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>İstanbul Deprem Simülasyonu · İlçe ve mahalle sonuçları · Kafa Haritası</title>
+<meta name="description" content="Bu gece saat 03:00'te Marmara'da 7,5 büyüklüğünde bir deprem olsaydı: 39 ilçe ve 959 mahallede bina hasarı, toplanma, barınma ve ilk üç gün. Kafa Haritası simülasyonu; deprem tahmini değildir.">
+<link rel="preload" href="../ortak/bricolage-800.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../ortak/kh.css">
+<link rel="stylesheet" href="harita.css">
+<script src="gom.js"></script>
+</head>
+<body>
+<main class="sayfa">
+  <header class="bas">
+    <p class="etiket">Kafa Haritası · İstanbul Deprem Simülasyonu</p>
+    <h1>İstanbul Deprem Simülasyonu · İlçe ve mahalle sonuçları</h1>
+    <p class="giris-metni">Bu gece saat 03:00'te Marmara'da 7,5 büyüklüğünde bir deprem olsaydı: 39 ilçe, 959 mahalle, ilk üç gün.</p>
+  </header>
+
+  <aside class="uyari" id="uyari" aria-label="Uyarı">
+    <p>Bu harita bir deprem tahmini değildir. Mahalle ve ilçe ortalamalarını gösterir, tek tek binalar hakkında bilgi vermez. Hazırlık için: <a href="https://www.afad.gov.tr" target="_blank" rel="noopener">AFAD</a> · <a href="https://www.turkiye.gov.tr/afet-ve-acil-durum-yonetimi-baskanligi" target="_blank" rel="noopener">e-Devlet'te Afet ve Acil Durum Toplanma Alanı Sorgulama</a>.</p>
+    <button type="button" class="kapat" id="uyari-kapat" aria-label="Uyarıyı kapat"><svg class="ikon" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3l10 10M13 3 3 13" stroke="currentColor" stroke-width="2"/></svg></button>
+  </aside>
+
+  <div class="katmanlar" role="radiogroup" aria-label="Katman">
+    <button type="button" role="radio" data-katman="hasar" aria-checked="true">Hasar</button>
+    <button type="button" role="radio" data-katman="toplanma" aria-checked="false">Toplanma</button>
+    <button type="button" role="radio" data-katman="barinma" aria-checked="false">Barınma</button>
+    <button type="button" role="radio" data-katman="ozet" aria-checked="false">Üç günün özeti</button>
+  </div>
+
+  <div class="govde">
+    <figure class="sekil" id="sekil">
+      <div class="cerceve" id="cerceve" tabindex="0" aria-describedby="klavye-ipucu">
+        <svg id="svg" viewBox="0 0 1000 522.5" role="img" aria-labelledby="svg-baslik" xmlns="http://www.w3.org/2000/svg">
+          <title id="svg-baslik">İstanbul haritası: ilçe ve mahalle sonuçları</title>
+          <defs>
+            <pattern id="tarama" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+              <rect width="6" height="6" fill="#CFC6B2"/>
+              <path d="M0 0V6" stroke="#B3A88F" stroke-width="1.6"/>
+            </pattern>
+          </defs>
+          <rect id="deniz" width="1000" height="522.5"/>
+          <path id="komsular"/>
+          <g id="ilce-dolgu"></g>
+          <g id="mahalleler"></g>
+          <g id="ilce-sinir"></g>
+          <path id="vurgu-ilce"/>
+          <path id="vurgu"/>
+          <g id="adlar"></g>
+        </svg>
+        <div class="zoom" role="group" aria-label="Yakınlaştırma">
+          <button type="button" id="yak" aria-label="Yakınlaştır"><svg class="ikon" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2"/></svg></button>
+          <button type="button" id="uzak" aria-label="Uzaklaştır"><svg class="ikon" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h12" stroke="currentColor" stroke-width="2"/></svg></button>
+          <button type="button" id="sifirla" aria-label="Bütün İstanbul'u göster"><svg class="ikon" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 6V2h4M10 2h4v4M14 10v4h-4M6 14H2v-4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button>
+        </div>
+        <div class="balon" id="balon" hidden></div>
+        <div class="ipucu" id="ipucu" role="status" hidden></div>
+      </div>
+      <p class="gizli" id="klavye-ipucu">Ok tuşlarıyla kaydırın, artı ve eksi tuşlarıyla yakınlaştırın. İlçe ve mahalleleri haritanın altındaki arama kutusundan ya da ilçe listesinden seçebilirsiniz.</p>
+
+      <div class="lejant" id="lejant" aria-live="polite"></div>
+
+      <div class="secim-cubugu">
+        <div class="ara-kutu">
+          <label for="ara" class="gizli">İlçe ya da mahalle ara</label>
+          <input id="ara" type="search" placeholder="İlçe ya da mahalle ara (ör. Şirinevler)" autocomplete="off" enterkeyhint="search" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="ara-sonuc" aria-autocomplete="list">
+          <ul class="ara-sonuc" id="ara-sonuc" role="listbox" hidden></ul>
+        </div>
+        <div class="il-sec">
+          <label for="ilce-sec" class="gizli">İlçe seçin</label>
+          <select id="ilce-sec"><option value="">İlçe seçin (39 ilçe)</option></select>
+        </div>
+        <a class="tam-sayfa" id="tam-sayfa" href="./" target="_blank" rel="noopener" hidden>Tam sayfada aç<svg class="ikon" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3h7v7M13 3 4 12" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></a>
+      </div>
+    </figure>
+
+    <aside class="kart" id="kart" aria-live="polite" aria-atomic="true"></aside>
+  </div>
+
+  <p class="hazirlik">Hazırlık için: <a href="https://www.afad.gov.tr" target="_blank" rel="noopener">AFAD</a> · <a href="https://www.turkiye.gov.tr/afet-ve-acil-durum-yonetimi-baskanligi" target="_blank" rel="noopener">e-Devlet'te toplanma alanı sorgulama</a></p>
+
+  <p class="atif">39 ilçe ve 959 mahalle. Hasar ve kayıp: İBB DEZİM–KRDAE (2019) ilçe kitapçıkları · Toplanma, ekipler, hastane ve barınma: Kafa Haritası simülasyonu · Mahalle sınırları: <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap katkıcıları</a>, ODbL · İlçe sınırları: geoBoundaries (OpenStreetMap türevi, ODbL) · Açık alanlar: OpenStreetMap ve İBB Açık Veri.</p>
+</main>
+<script src="veri.js"></script>
+<script src="harita.js"></script>
+</body>
+</html>

@@ -1,0 +1,191 @@
+/* Türkiye'nin Ölüm Haritası · 81 il kartı */
+.sayfa { max-width: 1280px; margin: 0 auto; padding: 22px 16px 24px; }
+
+.bas { margin-bottom: 14px; }
+.bas .etiket { margin: 0; }
+.bas h1 { margin: 6px 0 8px; font-weight: 800; font-size: clamp(28px, 4.4vw, 44px); line-height: 1.08; letter-spacing: -0.01em; text-wrap: balance; }
+.giris-metni { margin: 0; max-width: 68ch; font-size: 17px; }
+
+/* katman düğmeleri */
+.katmanlar { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 10px; }
+.katmanlar button {
+  min-height: 40px; padding: 6px 14px; cursor: pointer;
+  background: var(--kart); border: 1.5px solid var(--murekkep); border-radius: 2px;
+  font-size: 15px; font-weight: 500;
+}
+.katmanlar button:hover { border-color: var(--pas); }
+.katmanlar button[aria-checked="true"] { background: var(--murekkep); color: var(--kagit); font-weight: 800; }
+
+/* gövde: harita + kart */
+.govde { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 16px; align-items: start; }
+.sekil { margin: 0; min-width: 0; }
+.harita-kap { position: relative; }
+
+.cerceve {
+  position: relative;
+  aspect-ratio: 1000 / 436.5;
+  background: var(--deniz);
+  border: 1.5px solid var(--murekkep);
+  overflow: hidden;
+  touch-action: manipulation;
+  user-select: none; -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.cerceve.yakin { touch-action: none; cursor: grab; }
+.cerceve.suruk { cursor: grabbing; }
+.cerceve.uzerinde { cursor: pointer; }
+.cerceve:focus-visible { outline-offset: 3px; }
+#svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+
+#deniz { fill: var(--deniz); }
+#komsular { fill: var(--komsu); stroke: var(--cizgi); stroke-width: .6px; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+#iller path { stroke: #F8F3E8; stroke-width: .8px; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+#goller path { fill: var(--deniz); stroke: none; pointer-events: none; }
+#vurgu { fill: none; stroke: #E0A515; stroke-width: 3.2px; stroke-linejoin: round; vector-effect: non-scaling-stroke; pointer-events: none; }
+#vurgu.uzerinde { stroke: #171717; stroke-width: 2px; }
+#adlar text { font-family: var(--font); font-weight: 800; fill: #171717; stroke: #F8F3E8; stroke-linejoin: round; paint-order: stroke; pointer-events: none; text-anchor: middle; dominant-baseline: middle; }
+#adlar { display: none; }
+.adli #adlar { display: inline; }
+
+.zoom { position: absolute; top: 9px; right: 9px; z-index: 2; display: flex; flex-direction: column; gap: 6px; }
+.zoom button {
+  width: 40px; height: 40px; display: grid; place-items: center;
+  background: var(--kart); border: 1.5px solid var(--murekkep); border-radius: 2px;
+  cursor: pointer; font-size: 16px; padding: 0;
+}
+.zoom button:hover { background: var(--murekkep); color: var(--kagit); }
+.zoom button:disabled { cursor: default; background: var(--kart); color: var(--cizgi); border-color: var(--cizgi); }
+
+.balon {
+  position: absolute; transform: translate(-50%, calc(-100% - 12px));
+  background: var(--murekkep); color: var(--kagit);
+  padding: 4px 9px; border-radius: 2px; font-size: 13px; line-height: 1.35; white-space: nowrap; pointer-events: none;
+}
+.balon b { font-weight: 800; }
+.ipucu {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  background: rgba(23, 23, 23, .86); color: var(--kagit);
+  padding: 8px 14px; border-radius: 2px; font-size: 14px; pointer-events: none; text-align: center; max-width: 80%;
+}
+
+/* Türkiye kutusu: haritanın köşesinde sabit */
+/* Kutu, Suriye ve Irak'ın üstüne düşen sağ alt köşede durur (haritanın sağ %22'si, alt %21'i Türkiye dışı) */
+.harita-kap { container-type: inline-size; }
+.tr-kutu {
+  position: absolute; right: 1cqw; bottom: 1.1cqw; z-index: 2; width: 20cqw;
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; gap: 0 6px;
+  padding: .55cqw .9cqw .65cqw; text-align: left; cursor: pointer;
+  background: var(--kart); color: var(--murekkep);
+  border: 1.5px solid var(--murekkep); border-radius: 2px;
+}
+.tr-kutu:hover { border-color: var(--pas); }
+.tr-kutu[aria-pressed="true"] { box-shadow: inset 0 0 0 2px #E0A515; }
+.tr-ad { font-size: clamp(10.5px, 1.3cqw, 12px); letter-spacing: .1em; text-transform: uppercase; color: var(--altin); }
+.tr-sayi { font-weight: 800; font-size: clamp(18px, 3.1cqw, 28px); line-height: 1.05; font-variant-numeric: tabular-nums; justify-self: end; }
+.tr-birim { grid-column: 1 / -1; font-size: clamp(10.5px, 1.35cqw, 12px); line-height: 1.25; color: var(--meta); }
+
+/* lejant */
+.lejant { padding: 10px 0 2px; font-size: 13px; color: var(--meta); max-width: 560px; }
+.lejant .l-baslik { margin: 0 0 6px; font-weight: 800; color: var(--murekkep); font-size: 14px; }
+.lejant .olcek { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: start; gap: 8px; }
+.lejant .uc { font-size: 13px; line-height: 16px; color: var(--murekkep); }
+.lejant .kutular, .lejant .sayilar { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); }
+.lejant .kutular span { height: 16px; border-right: 1px solid var(--kagit); }
+.lejant .kutular span:last-child { border-right: 0; }
+.lejant .sayilar span { font-size: 12.5px; line-height: 1.5; text-align: right; transform: translateX(50%); font-variant-numeric: tabular-nums; color: var(--murekkep); }
+.lejant .l-not { margin: 6px 0 0; font-size: 13px; line-height: 1.45; }
+
+/* il seçimi + arama */
+.secim-cubugu { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 8px 12px; padding: 12px 0 2px; }
+.il-sec { flex: 0 1 240px; min-width: 0; }
+.ara-kutu { position: relative; flex: 1 1 220px; min-width: 0; max-width: 340px; }
+.il-sec-etiket { display: block; margin: 0 0 3px; font-size: 13px; font-weight: 800; }
+.ara-kutu input {
+  width: 100%; min-height: 44px; padding: 8px 12px; font-size: 16px;
+  border: 1.5px solid var(--murekkep); border-radius: 2px; background: var(--kart);
+}
+.il-sec select {
+  width: 100%; min-height: 44px; padding: 8px 38px 8px 12px; font-size: 16px; cursor: pointer;
+  border: 1.5px solid var(--murekkep); border-radius: 2px;
+  -webkit-appearance: none; appearance: none;
+  background: var(--kart) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 6l5 5 5-5' fill='none' stroke='%23171717' stroke-width='2'/%3E%3C/svg%3E") no-repeat right 12px center / 14px 14px;
+}
+.ara-sonuc {
+  position: absolute; left: 0; right: 0; bottom: calc(100% + 4px); z-index: 5;
+  list-style: none; margin: 0; padding: 4px 0; max-height: 260px; overflow-y: auto;
+  background: var(--kart); border: 1.5px solid var(--murekkep); border-radius: 2px;
+  box-shadow: 0 4px 14px rgba(23,23,23,.18);
+}
+.ara-sonuc[hidden] { display: none; }
+.ara-sonuc li { padding: 8px 12px; cursor: pointer; font-size: 15px; line-height: 1.3; }
+.ara-sonuc li[aria-selected="true"], .ara-sonuc li:hover { background: var(--murekkep); color: var(--kagit); }
+.ara-sonuc li.bos { cursor: default; color: var(--meta); }
+.ara-sonuc li.bos:hover { background: none; color: var(--meta); }
+.tam-sayfa { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; white-space: nowrap; margin-left: auto; min-height: 44px; }
+.tam-sayfa[hidden] { display: none; }
+
+/* kart */
+.kart {
+  background: var(--kart);
+  border: 1.5px solid var(--murekkep);
+  padding: 14px 16px;
+  max-height: calc(100vh - 40px); overflow-y: auto;
+  position: sticky; top: 12px;
+}
+.kart > .etiket { margin: 0; }
+.kart h2 { margin: 2px 0 6px; font-weight: 800; font-size: 26px; line-height: 1.15; }
+.kart p { margin: 0 0 8px; font-size: 15px; line-height: 1.5; }
+.kart .bolum { border-top: 1px solid var(--cizgi); padding-top: 8px; margin-top: 4px; }
+.kart h3 { margin: 0 0 6px; font-weight: 800; font-size: 15px; line-height: 1.3; }
+.kart dl { margin: 0 0 8px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 3px 12px; font-size: 14px; line-height: 1.4; }
+.kart .satir { display: contents; }
+.kart dt { color: var(--meta); display: flex; align-items: center; gap: 7px; min-width: 0; }
+.kart dd { margin: 0; font-weight: 800; text-align: right; font-variant-numeric: tabular-nums; }
+.kart .secili dt { color: var(--murekkep); font-weight: 800; }
+.kart .secili dd { font-size: 16px; }
+.kart .cip { width: 12px; height: 12px; flex: none; border: 1px solid rgba(23,23,23,.35); }
+.kart .not { margin: -2px 0 8px; font-size: 13px; color: var(--meta); line-height: 1.45; }
+.kart .il-not { margin: 8px 0 0; padding: 7px 10px; background: var(--kagit); font-size: 13.5px; line-height: 1.45; }
+.kart .sabit { margin: 10px 0 0; padding-top: 10px; border-top: 1px dashed var(--cizgi); font-size: 13px; color: var(--meta); line-height: 1.45; }
+
+.atif {
+  margin: 14px 0 0; padding: 10px 14px;
+  background: var(--murekkep); color: var(--kagit);
+  font-size: 12px; line-height: 1.6; letter-spacing: .03em;
+}
+.atif a { color: var(--kagit); }
+.atif a:hover { color: var(--deprem); }
+
+/* gömülü görünüm: başlık bölüm sayfasında var */
+.gomulu .bas { display: none; }
+.gomulu .sayfa { padding: 2px 2px 10px; }
+.gomulu .govde { grid-template-columns: 1fr; gap: 10px; }
+.gomulu .kart { position: static; max-height: 420px; }
+.gomulu .atif { margin-top: 10px; }
+
+@media (max-width: 900px) {
+  .govde { grid-template-columns: 1fr; gap: 12px; }
+  .kart { position: static; max-height: none; }
+}
+@media (max-width: 600px) {
+  .sayfa { padding: 14px 12px 16px; }
+  .giris-metni { font-size: 16px; }
+  .harita-kap { display: flex; flex-wrap: wrap; gap: 8px; }
+  .cerceve { flex: 1 1 100%; }
+  .zoom { position: static; order: 2; gap: 4px; flex-direction: row; }
+  .zoom button { width: 38px; height: 40px; }
+  .katmanlar button { flex: 1 1 calc(50% - 6px); padding: 5px 8px; font-size: 14px; min-height: 38px; }
+  .tr-kutu { position: static; order: 1; flex: 1 1 0; min-width: 0; width: auto; padding: 4px 10px 5px; grid-template-columns: minmax(0, 1fr) auto; gap: 0 8px; align-items: center; }
+  .tr-ad { grid-column: 1; grid-row: 1; font-size: 12px; }
+  .tr-birim { grid-column: 1; grid-row: 2; font-size: 11.5px; }
+  .tr-sayi { grid-column: 2; grid-row: 1 / span 2; font-size: 26px; }
+  .il-sec, .ara-kutu { flex: 1 1 calc(50% - 6px); max-width: none; }
+  .ara-sonuc { right: auto; width: max(100%, 200px); }
+  .tam-sayfa { margin-left: 0; min-height: 36px; }
+  .gomulu .kart { max-height: 370px; }
+  .gomulu .katmanlar button { min-height: 34px; padding: 3px 8px; }
+  .gomulu .secim-cubugu { gap: 6px; padding-top: 8px; }
+}
+@media (max-width: 380px) {
+  .lejant .sayilar span { font-size: 11.5px; }
+}

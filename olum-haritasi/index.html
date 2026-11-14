@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'none'; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>Türkiye'nin Ölüm Haritası · 81 il kartı · Kafa Haritası</title>
+<meta name="description" content="81 ilin kartı: beş hastalıktan ölümler, kış aylarındaki artış ve ilin yaş yapısı. Dört yılın TÜİK verisi: 2018, 2019, 2024 ve 2025. Kafa Haritası Bölüm 08.">
+<link rel="preload" href="../ortak/bricolage-800.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../ortak/kh.css">
+<link rel="stylesheet" href="harita.css">
+<script src="gom.js"></script>
+</head>
+<body>
+<main class="sayfa">
+  <header class="bas">
+    <p class="etiket">Kafa Haritası · Bölüm 08 · 81 il</p>
+    <h1>Türkiye'nin Ölüm Haritası · 81 il kartı</h1>
+    <p class="giris-metni">İlinize dokunun: beş hastalıktan ölümler, kış artışı ve ilin yaş yapısı. Dört yılın verisi: 2018, 2019, 2024 ve 2025.</p>
+  </header>
+
+  <div class="katmanlar" role="radiogroup" aria-label="Harita">
+    <button type="button" role="radio" data-katman="kalp" aria-checked="true">Kalp ve damar</button>
+    <button type="button" role="radio" data-katman="kanser" aria-checked="false">Kanser</button>
+    <button type="button" role="radio" data-katman="solunum" aria-checked="false">Solunum</button>
+    <button type="button" role="radio" data-katman="seker" aria-checked="false">Şeker</button>
+    <button type="button" role="radio" data-katman="alzheimer" aria-checked="false">Alzheimer ve sinir</button>
+    <button type="button" role="radio" data-katman="kis" aria-checked="false">Kış</button>
+  </div>
+
+  <div class="govde">
+    <figure class="sekil" id="sekil">
+      <div class="harita-kap">
+      <div class="cerceve" id="cerceve" tabindex="0" aria-describedby="klavye-ipucu">
+        <svg id="svg" viewBox="0 0 1000 436.5" role="img" aria-labelledby="svg-baslik" xmlns="http://www.w3.org/2000/svg">
+          <title id="svg-baslik">Türkiye haritası: 81 il</title>
+          <rect id="deniz" width="1000" height="436.5"/>
+          <path id="komsular"/>
+          <g id="iller"></g>
+          <g id="goller"></g>
+          <path id="vurgu"/>
+          <g id="adlar"></g>
+        </svg>
+        <div class="balon" id="balon" hidden></div>
+        <div class="ipucu" id="ipucu" role="status" hidden></div>
+      </div>
+      <div class="zoom" role="group" aria-label="Yakınlaştırma">
+        <button type="button" id="yak" aria-label="Yakınlaştır"><svg class="ikon" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2"/></svg></button>
+        <button type="button" id="uzak" aria-label="Uzaklaştır"><svg class="ikon" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h12" stroke="currentColor" stroke-width="2"/></svg></button>
+        <button type="button" id="sifirla" aria-label="Bütün Türkiye'yi göster"><svg class="ikon" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 6V2h4M10 2h4v4M14 10v4h-4M6 14H2v-4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button>
+      </div>
+      <button type="button" class="tr-kutu" id="tr-kutu" aria-pressed="false">
+        <span class="tr-ad">Türkiye</span>
+        <span class="tr-sayi" id="tr-sayi">211</span>
+        <span class="tr-birim" id="tr-birim">her 100 bin kişide, yılda</span>
+      </button>
+      </div>
+      <p class="gizli" id="klavye-ipucu">Ok tuşlarıyla kaydırın, artı ve eksi tuşlarıyla yakınlaştırın. İlleri haritanın altındaki listeden ya da arama kutusundan seçebilirsiniz.</p>
+
+      <div class="lejant" id="lejant" aria-live="polite"></div>
+
+      <div class="secim-cubugu">
+        <div class="il-sec">
+          <label for="il-sec" class="il-sec-etiket">İlinizi seçin</label>
+          <select id="il-sec"><option value="">81 il</option></select>
+        </div>
+        <div class="ara-kutu">
+          <label for="ara" class="il-sec-etiket">İl ara</label>
+          <input id="ara" type="search" placeholder="ör. Şanlıurfa" autocomplete="off" enterkeyhint="search" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="ara-sonuc" aria-autocomplete="list">
+          <ul class="ara-sonuc" id="ara-sonuc" role="listbox" hidden></ul>
+        </div>
+        <a class="tam-sayfa" id="tam-sayfa" href="./" target="_blank" rel="noopener" hidden>Tam sayfada aç<svg class="ikon" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3h7v7M13 3 4 12" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></a>
+      </div>
+    </figure>
+
+    <aside class="kart" id="kart" aria-live="polite" aria-atomic="true"></aside>
+  </div>
+
+  <p class="atif">81 il kartı. Ölümler ve nüfus: TÜİK (2018, 2019, 2024, 2025) · Hesap: Kafa Haritası; illerin yaş ve cinsiyet yapısı hesaba katılmıştır · İl sınırları: <a href="https://www.geoboundaries.org" target="_blank" rel="noopener">geoBoundaries</a> (<a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> verisi, CC BY-SA 2.0) · Komşu ülkeler: Natural Earth</p>
+</main>
+<script src="veri.js"></script>
+<script src="harita.js"></script>
+</body>
+</html>

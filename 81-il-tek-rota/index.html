@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'none'; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>81 İl, Tek Rota · 81 il kartı · Kafa Haritası</title>
+<meta name="description" content="Hiçbir ilin sınırından ikinci kez girmeden 81 il: her il için o ilden başlayan rota, ilin rotaya eklediği kilometre ve rotada önceki ve sonraki il. Kafa Haritası Bölüm 10.">
+<link rel="preload" href="../ortak/bricolage-800.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../ortak/kh.css">
+<link rel="stylesheet" href="harita.css">
+<script src="gom.js"></script>
+</head>
+<body>
+<main class="sayfa">
+  <header class="bas">
+    <p class="etiket">Kafa Haritası · Bölüm 10 · 81 il</p>
+    <h1>81 İl, Tek Rota · 81 il kartı</h1>
+    <p class="giris-metni">Hiçbir ilin sınırından ikinci kez girmeden 81 il: ilinize dokunun; o ilden başlayan rota, ilin rotaya eklediği kilometre ve rotada önceki ve sonraki il açılır.</p>
+  </header>
+
+  <div class="katmanlar" role="radiogroup" aria-label="Harita">
+    <button type="button" role="radio" data-katman="rota" aria-checked="true">Rota</button>
+    <button type="button" role="radio" data-katman="baslangic" aria-checked="false">Nereden başlamalı?</button>
+    <button type="button" role="radio" data-katman="ekledigi" aria-checked="false">Rotaya eklediği</button>
+  </div>
+
+  <div class="govde">
+    <figure class="sekil" id="sekil">
+      <div class="harita-kap">
+      <div class="cerceve" id="cerceve" aria-describedby="harita-ipucu">
+        <svg id="svg" viewBox="0 0 1000 436.5" role="img" aria-labelledby="svg-baslik" xmlns="http://www.w3.org/2000/svg">
+          <title id="svg-baslik">Türkiye haritası: 81 il ve dönüşlü en kısa tur</title>
+          <rect id="deniz" width="1000" height="436.5"/>
+          <path id="komsular"/>
+          <g id="iller"></g>
+          <g id="goller"></g>
+          <path id="vurgu"/>
+          <g id="rota-kasa"></g>
+          <g id="rota"></g>
+          <g id="rota-sec-kasa"></g>
+          <g id="rota-sec"></g>
+          <circle id="merkez" r="0" cx="-10" cy="-10"/>
+        </svg>
+        <div class="balon" id="balon" hidden></div>
+      </div>
+      <button type="button" class="tr-kutu" id="tr-kutu" aria-pressed="false">
+        <span class="tr-ad">Türkiye</span>
+        <span class="tr-sayi" id="tr-sayi">9.707 km</span>
+        <span class="tr-birim" id="tr-birim">Dönüşlü en kısa tur</span>
+      </button>
+      </div>
+      <p class="gizli" id="harita-ipucu">İlleri haritanın altındaki listeden ya da arama kutusundan seçebilirsiniz.</p>
+
+      <div class="lejant" id="lejant" aria-live="polite"></div>
+
+      <div class="secim-cubugu">
+        <div class="il-sec">
+          <label for="il-sec" class="il-sec-etiket">İlinizi seçin</label>
+          <select id="il-sec"><option value="">81 il</option></select>
+        </div>
+        <div class="ara-kutu">
+          <label for="ara" class="il-sec-etiket">İl ara</label>
+          <input id="ara" type="search" placeholder="ör. Şanlıurfa" autocomplete="off" enterkeyhint="search" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="ara-sonuc" aria-autocomplete="list">
+          <ul class="ara-sonuc" id="ara-sonuc" role="listbox" hidden></ul>
+        </div>
+        <a class="tam-sayfa" id="tam-sayfa" href="./" target="_blank" rel="noopener" hidden>Tam sayfada aç<svg class="ikon" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3h7v7M13 3 4 12" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></a>
+      </div>
+    </figure>
+
+    <aside class="kart" id="kart" aria-live="polite" aria-atomic="true"></aside>
+  </div>
+
+  <p class="atif">81 il kartı ve dönüşlü en kısa tur. Yol ağı, il sınırları ve il merkezleri: © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap katkıcıları</a> (ODbL), 19 Kasım 2026 · Hesap: Kafa Haritası · Süreler direksiyon başında, hız sınırlarında, molasız · Komşu ülkeler: Natural Earth</p>
+</main>
+<script src="veri.js"></script>
+<script src="harita.js"></script>
+</body>
+</html>

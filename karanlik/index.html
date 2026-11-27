@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="theme-color" content="#1C1A17">
+<title>Türkiye'nin En Karanlık Yeri · Samanyolu'nu görmek için size en yakın yer · Kafa Haritası</title>
+<meta name="description" content="Türkiye'nin gece gökyüzü haritası. Haritaya dokunun ya da konumunuzu kullanın: Samanyolu'nun göründüğü size en yakın yeri gösterelim. 81 ilin en karanlık noktası ve en karanlık 10 bölge.">
+<link rel="preload" href="yazi/bricolage-800.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="leaflet/leaflet.css">
+<link rel="stylesheet" href="karanlik_2026-11-27.css">
+<script src="gom.js"></script>
+</head>
+<body>
+<main class="sayfa">
+  <header class="bas-alan">
+    <p class="etiket">Kafa Haritası · Gece gökyüzü · 81 il</p>
+    <h1>Türkiye'nin En Karanlık Yeri</h1>
+    <p class="alt-baslik">Samanyolu'nu görmek için size en yakın yer</p>
+    <p class="giris">Samanyolu hep orada. Göremiyorsak, sebep gökyüzü değil; sebep bizim ışıklarımız. Bir uydunun gece fotoğrafıyla Türkiye'nin her noktasının gökyüzünü hesapladık. Bu haritada Samanyolu'nun göründüğü en yakın yeri bulabilirsiniz.</p>
+  </header>
+
+  <section class="arac" aria-label="Size en yakın yer">
+    <button type="button" class="dugme" id="konum">
+      <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="3.2" fill="currentColor"/><circle cx="10" cy="10" r="6.6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M10 0.8v3M10 16.2v3M0.8 10h3M16.2 10h3" stroke="currentColor" stroke-width="1.8"/></svg>
+      Konumumu kullan
+    </button>
+    <p class="ipucu">ya da haritada bir yere dokunun</p>
+    <a class="tam-sayfa" id="tam-sayfa" href="./" target="_blank" rel="noopener">Tam sayfada aç<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3h7v7M13 3 4 12" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></a>
+  </section>
+
+  <div class="harita-kap">
+    <div id="harita" role="application" aria-label="Türkiye gece gökyüzü haritası. Bir yere dokunun; Samanyolu'nun göründüğü en yakın yer gösterilir." aria-describedby="harita-ipucu"></div>
+    <div class="lejant" aria-hidden="true">
+      <div class="rampa"><span>Karanlık gök</span><i></i><span>Işık</span></div>
+      <div class="kubbe-anahtar"><i></i><span>Samanyolu görünmüyor</span></div>
+    </div>
+  </div>
+  <p class="gizli" id="harita-ipucu">Haritanın metin karşılığı aşağıdaki kart, il seçme kutusu ve 81 il listesidir.</p>
+
+  <section class="kart" id="kart" aria-live="polite"></section>
+
+  <div class="il-sec">
+    <label for="il-sec">İlinizi seçin</label>
+    <select id="il-sec"><option value="">81 il</option></select>
+  </div>
+
+  <details class="katlanir" id="liste-kutu">
+    <summary><span>81 il, en karanlıktan en aydınlığa</span><b class="ac">Aç</b></summary>
+    <p class="liste-not">Sıra, ilin en karanlık noktasına göre. "Munzur'dan kaç kat parlak": 1,0 Munzur kadar karanlık demek.</p>
+    <div class="tablo-kap">
+      <table class="liste">
+        <thead><tr><th>Sıra</th><th>İl</th><th>Munzur'dan kat</th><th>Bortle</th><th>Samanyolu için kuş uçuşu</th></tr></thead>
+        <tbody id="liste"></tbody>
+      </table>
+    </div>
+  </details>
+
+  <details class="katlanir" id="bolge-kutu">
+    <summary><span>En karanlık 10 bölge (videodaki geri sayım)</span><b class="ac">Aç</b></summary>
+    <ol class="bolgeler" id="bolgeler"></ol>
+    <p class="liste-not">Sivas'ın iki bölgesi ve Akdağ da listeye girecek kadar karanlıktı; aynı ilden en çok iki bölge aldık.</p>
+  </details>
+
+  <section class="notlar">
+    <h2>Bilmeniz gerekenler</h2>
+    <dl>
+      <div><dt>Ne demek "Samanyolu görünür"?</dt><dd>Orası Samanyolu'nun tam sınırda olduğu yer. Orada çok sönüktür; ışıktan uzaklaştıkça belirginleşir.</dd></div>
+      <div><dt>Yalnız karanlık yetmez</dt><dd>Yıldızı görmek için gökyüzünün açık olması da gerekir. Açık gece sayısı yerden yere çok değişir.</dd></div>
+      <div><dt>Ay da gökyüzünü aydınlatır</dt><dd>En iyi zaman aysız gecelerdir.</dd></div>
+      <div><dt>Sayılar hakkında</dt><dd>Bütün sayılar yaklaşık; bunlar bizim hesabımız. Mesafelerin yanındaki aralık, hesabın ne kadar emin olduğunu gösterir.</dd></div>
+      <div><dt>Melikler Yaylası</dt><dd>Basında "Türkiye'nin en karanlık yeri" diye geçen 22,04 değeri, 2017'de Melikler Yaylası'nda yapılan iki gökyüzü ölçümünün ortalaması. Biz tek bir yerde ölçmedik; bütün Türkiye'nin bir yıllık gökyüzünü hesapladık.</dd></div>
+    </dl>
+  </section>
+
+  <section class="guvenlik">
+    <h2>Yola çıkacaksanız</h2>
+    <p>Gece yollarında dikkatli olun. Dağ yollarına yalnız ve hazırlıksız çıkmayın. Hava durumuna bakın; birine nereye gittiğinizi ve ne zaman döneceğinizi söyleyin. Askerî alanlara ve özel mülke girmeyin.</p>
+  </section>
+
+  <details class="katlanir yontem">
+    <summary><span>Nasıl hesapladık?</span><b class="ac">Aç</b></summary>
+    <ul>
+      <li><b>Gece ışıkları:</b> VIIRS uydusunun 2025 yılı gece ışıkları; bulutlu ve aylı geceler ayıklanmış yıllık ortalama.</li>
+      <li><b>Gökyüzü:</b> Her nokta için 200 km çevredeki bütün ışıkları topladık. Yakındaki ışık çok, uzaktaki az sayıldı; yükseklik de hesaba katıldı. Hesabı Globe at Night gönüllülerinin Türkiye'deki 22 ölçümüyle ayarladık.</li>
+      <li><b>Samanyolu eşiği:</b> Bilimsel bir çalışmadaki eşik (Falchi vd. 2016); yapay ışık bu eşiği geçince Samanyolu görünmez olur.</li>
+      <li><b>Açık gece:</b> 2016–2025 saatlik bulut verisi. Gece 22.00, 00.00 ve 02.00'nin üçünde de gökyüzünün en çok dörtte biri bulutluysa "açık gece".</li>
+      <li><b>Mesafeler:</b> İl merkezinden Samanyolu'nun göründüğü en yakın yere kuş uçuşu ve yolla (molasız). Askerî alanlar hedef olarak gösterilmez.</li>
+      <li><b>Size en yakın yer:</b> Haritada dokunduğunuz yerden ya da konumunuzdan, Samanyolu'nun göründüğü en yakın yere kuş uçuşu. Yaklaşık 1 km'lik kareler üzerinden. Konumunuz yalnız telefonunuzda ya da bilgisayarınızda kullanılır; hiçbir yere gönderilmez.</li>
+      <li><b>Bilinen sınırlar:</b> Model basit; dağların ışığı perdelemesi hesapta yok. Uydu, gece 01.30'dan önce sönen ışıkları, çok sönük ışıkları ve beyaz LED'in mavi ışığının bir kısmını göremez. Gerçek gökyüzü gece gece değişir.</li>
+    </ul>
+  </details>
+
+  <footer class="kaynaklar">
+    <h2>Kaynaklar ve lisanslar</h2>
+    <p>Gece ışıkları: Earth Observation Group, Payne Institute for Public Policy (Colorado School of Mines), VIIRS Nighttime Lights V2, CC BY 4.0 · Gökyüzü ölçümleri: Globe at Night, NSF NOIRLab, CC BY 4.0 · Nüfus: GHS-POP R2023A, Avrupa Komisyonu JRC, CC BY 4.0 · Bulut: Contains modified Copernicus Climate Change Service information [2026] · Yükselti: Copernicus DEM GLO-90 (© DLR e.V. 2010-2014 and © Airbus Defence and Space GmbH 2014-2018 provided under COPERNICUS by the European Union and ESA; all rights reserved) · Harita verisi: © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap katkıcıları</a> (ODbL), geoBoundaries · Eşik ve ölçek: Falchi vd. 2016; Bortle 2001; Solmaz vd. 2021 · Harita kütüphanesi: Leaflet (BSD-2) · Hesap: Kafa Haritası</p>
+    <p class="video-bag" id="video-bag" hidden>Bu harita Kafa Haritası'nın "Türkiye'nin En Karanlık Yeri" videosu için hazırlandı. <a id="video-link" href="#" target="_blank" rel="noopener">Videoyu izleyin</a></p>
+  </footer>
+</main>
+<script src="leaflet/leaflet.js"></script>
+<script src="veri_2026-11-27.js"></script>
+<script src="karanlik_2026-11-27.js"></script>
+</body>
+</html>

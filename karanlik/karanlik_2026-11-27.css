@@ -1,0 +1,195 @@
+/* Kafa Haritası · Türkiye'nin En Karanlık Yeri (27 Kasım 2026). Gece teması; mavi yok. */
+@font-face { font-family: "Bricolage"; src: url(yazi/bricolage-500.woff2) format("woff2"); font-weight: 500; font-display: swap; }
+@font-face { font-family: "Bricolage"; src: url(yazi/bricolage-800.woff2) format("woff2"); font-weight: 800; font-display: swap; }
+@font-face { font-family: "KHMono"; src: url(yazi/jbmono-500.woff2) format("woff2"); font-weight: 500; font-display: swap; }
+
+:root {
+  --gece: #1C1A17; --gece2: #26231E; --gece3: #302C25; --gece4: #3E382E; --gececizgi: #5A5244;
+  --kagit: #EFE6D2; --tas: #D9CCAE; --kum: #C9B98F; --sinir: #B8A67C;
+  --hardal: #E0A515; --khardal: #7A5604; --pas: #B5442A; --murekkep: #171717;
+  --metin: #EFE6D2; --soluk: #B8A67C;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--gece); color: var(--metin);
+  font-family: "Bricolage", system-ui, sans-serif; font-weight: 500; font-size: 16px; line-height: 1.5;
+}
+a { color: var(--hardal); }
+button, select, input { font: inherit; color: inherit; }
+.gizli { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.mono { font-family: "KHMono", ui-monospace, monospace; font-weight: 500; }
+
+.sayfa {
+  max-width: 1080px; margin: 0 auto;
+  padding-block: 20px 40px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex; flex-direction: column; gap: 14px;
+}
+
+/* başlık */
+.bas-alan { display: flex; flex-direction: column; gap: 6px; padding-bottom: 6px; }
+.etiket { margin: 0; font-family: "KHMono", ui-monospace, monospace; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--hardal); }
+h1 { margin: 0; font-weight: 800; font-size: clamp(30px, 5.4vw, 52px); line-height: 1.04; letter-spacing: -.01em; text-wrap: balance; }
+.alt-baslik { margin: 0; font-weight: 800; font-size: clamp(18px, 2.6vw, 24px); color: var(--hardal); line-height: 1.2; }
+.giris { margin: 4px 0 0; max-width: 62ch; font-size: 17px; color: var(--tas); }
+h2 { margin: 0 0 8px; font-weight: 800; font-size: 20px; line-height: 1.2; }
+
+/* araç çubuğu */
+.arac { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+.dugme {
+  display: inline-flex; align-items: center; gap: 9px; min-height: 46px; padding: 8px 18px;
+  background: var(--hardal); color: var(--murekkep); border: 0; border-radius: 3px; cursor: pointer;
+  font-weight: 800; font-size: 16px;
+}
+.dugme svg { width: 20px; height: 20px; flex: none; }
+.dugme:hover { background: #EDC560; }
+.dugme:focus-visible, .katlanir summary:focus-visible, select:focus-visible, .liste tr:focus-visible, .bolge:focus-visible { outline: 2px solid var(--kagit); outline-offset: 2px; }
+.dugme[aria-busy="true"] { opacity: .7; cursor: progress; }
+.ipucu { margin: 0; color: var(--soluk); font-size: 15px; }
+.tam-sayfa { display: none; margin-left: auto; align-items: center; gap: 5px; font-size: 14px; text-decoration: none; }
+.tam-sayfa svg { width: 13px; height: 13px; }
+
+/* harita */
+.harita-kap { position: relative; border: 1px solid var(--gece4); border-radius: 3px; overflow: hidden; }
+#harita { height: clamp(360px, 58vh, 600px); background: var(--gece); }
+.leaflet-container { background: var(--gece); font-family: "Bricolage", system-ui, sans-serif; outline: 0; cursor: crosshair; }
+.leaflet-container.leaflet-grab { cursor: crosshair; }
+.leaflet-dragging .leaflet-container { cursor: grabbing; }
+.leaflet-control-zoom a { background: var(--gece2); color: var(--kagit); border-color: var(--gece4) !important; width: 34px; height: 34px; line-height: 32px; }
+.leaflet-control-zoom a:hover { background: var(--gece3); }
+.leaflet-bar { border: 1px solid var(--gece4) !important; box-shadow: none !important; }
+.leaflet-tooltip.mesafe {
+  background: var(--murekkep); color: var(--kagit); border: 1px solid var(--hardal); border-radius: 2px; box-shadow: none;
+  font-family: "KHMono", ui-monospace, monospace; font-size: 13px; padding: 2px 7px;
+}
+.leaflet-tooltip.mesafe::before { display: none; }
+.leaflet-tooltip.il-ad {
+  background: transparent; border: 0; box-shadow: none; color: var(--kagit); padding: 0;
+  font-weight: 800; font-size: 13px; text-shadow: 0 0 3px var(--gece), 0 0 3px var(--gece), 0 0 6px var(--gece);
+}
+.leaflet-tooltip.il-ad::before { display: none; }
+
+.lejant {
+  position: absolute; left: 8px; bottom: 8px; z-index: 500; pointer-events: none;
+  display: flex; flex-direction: column; gap: 5px; padding: 7px 9px;
+  background: rgba(28, 26, 23, .86); border: 1px solid var(--gece4); border-radius: 2px;
+  font-size: 12px; color: var(--tas);
+}
+.rampa { display: flex; align-items: center; gap: 6px; }
+.rampa i {
+  display: block; width: 110px; height: 9px; border-radius: 1px;
+  background: linear-gradient(90deg, #0A0908 2.5%, #191611 7.4%, #2B2419 14.7%, #46351A 23.4%, #6B4C0E 34.7%, #9A6C0A 49%, #C98F10 63.4%, #E0A515 71.4%, #EDC560 81.2%, #F5E2B0 90.3%, #FFFDF6 99.3%);
+}
+.kubbe-anahtar { display: flex; align-items: center; gap: 6px; }
+.kubbe-anahtar i { display: block; width: 18px; height: 9px; background: var(--kagit); border: 1px solid var(--sinir); }
+
+/* kart */
+.kart {
+  background: var(--gece2); border: 1px solid var(--gece4); border-left: 4px solid var(--hardal); border-radius: 3px;
+  padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; min-height: 92px;
+}
+.kart h3 { margin: 0; font-weight: 800; font-size: 22px; line-height: 1.2; text-wrap: balance; }
+.kart .ust { margin: 0; font-family: "KHMono", ui-monospace, monospace; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--hardal); }
+.kart .buyuk { margin: 0; font-weight: 800; font-size: clamp(26px, 4vw, 34px); line-height: 1.1; color: var(--hardal); }
+.kart .buyuk small { font-size: .55em; color: var(--kagit); font-weight: 500; margin-left: 4px; }
+.kart p { margin: 0; }
+.kart ul { margin: 2px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 5px; }
+.kart li { padding-left: 14px; position: relative; }
+.kart li::before { content: ""; position: absolute; left: 0; top: .62em; width: 6px; height: 6px; background: var(--hardal); border-radius: 50%; }
+.kart b { font-weight: 800; }
+.kart .soluk { color: var(--soluk); font-size: 14px; }
+.kart .uyari { color: var(--tas); font-size: 14px; border-top: 1px dashed var(--gece4); padding-top: 7px; margin-top: 2px; }
+.kart .not { color: var(--kagit); font-size: 14px; background: var(--gece3); padding: 6px 9px; border-radius: 2px; }
+.koord { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
+.koord code { font-family: "KHMono", ui-monospace, monospace; font-size: 14px; color: var(--kagit); background: var(--gece3); padding: 2px 7px; border-radius: 2px; user-select: all; }
+.kopyala { background: transparent; border: 1px solid var(--gecelizgi, var(--gececizgi)); color: var(--tas); border-radius: 2px; padding: 2px 9px; min-height: 30px; cursor: pointer; font-size: 13px; }
+.kopyala:hover { border-color: var(--hardal); color: var(--kagit); }
+.kart-dug { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+.kart-dug button { background: transparent; border: 1px solid var(--gececizgi); color: var(--kagit); border-radius: 2px; padding: 4px 11px; min-height: 36px; cursor: pointer; font-size: 14px; }
+.kart-dug button:hover { border-color: var(--hardal); }
+
+/* il seç */
+.il-sec { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; }
+.il-sec label { font-weight: 800; }
+.il-sec select {
+  min-height: 44px; min-width: 220px; flex: 1 1 220px; max-width: 360px; padding: 6px 10px;
+  background: var(--gece2); border: 1px solid var(--gececizgi); border-radius: 3px; color: var(--kagit);
+}
+
+/* katlanır bölümler */
+.katlanir { border: 1px solid var(--gece4); border-radius: 3px; background: var(--gece); }
+.katlanir summary {
+  list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  min-height: 48px; padding: 8px 14px; font-weight: 800; font-size: 17px;
+}
+.katlanir summary::-webkit-details-marker { display: none; }
+.katlanir .ac { font-size: 13px; color: var(--hardal); font-family: "KHMono", ui-monospace, monospace; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; }
+.katlanir[open] .ac { visibility: hidden; }
+.katlanir[open] .ac::after { content: "Kapat"; visibility: visible; margin-left: -2.2em; }
+.katlanir > *:not(summary) { margin-left: 14px; margin-right: 14px; }
+.liste-not { margin: 0 14px 10px; font-size: 14px; color: var(--soluk); }
+
+.tablo-kap { overflow-x: auto; margin-bottom: 10px; }
+.liste { width: 100%; border-collapse: collapse; font-size: 15px; }
+.liste th { text-align: left; font-size: 12px; font-family: "KHMono", ui-monospace, monospace; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--soluk); padding: 6px 8px; border-bottom: 1px solid var(--gece4); white-space: nowrap; }
+.liste td { padding: 7px 8px; border-bottom: 1px solid var(--gece3); white-space: nowrap; }
+.liste td.s, .liste td.n { font-family: "KHMono", ui-monospace, monospace; font-size: 14px; }
+.liste td.s { color: var(--soluk); width: 3.5em; }
+.liste tbody tr { cursor: pointer; }
+.liste tbody tr:hover, .liste tbody tr.secili { background: var(--gece2); }
+.liste tbody tr.secili td:nth-child(2) { color: var(--hardal); font-weight: 800; }
+
+.bolgeler { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; margin-bottom: 10px; }
+.bolge {
+  display: flex; flex-direction: column; gap: 4px; text-align: left; width: 100%; height: 100%;
+  background: var(--gece2); border: 1px solid var(--gece4); border-radius: 3px; padding: 10px 12px; cursor: pointer; color: var(--kagit);
+}
+.bolge:hover { border-color: var(--hardal); }
+.bolge .no { font-weight: 800; font-size: 28px; line-height: 1; color: var(--hardal); }
+.bolge .ad { font-weight: 800; font-size: 16px; line-height: 1.25; }
+.bolge .il { font-size: 13px; color: var(--soluk); }
+.bolge .say { font-size: 14px; color: var(--tas); }
+
+/* notlar, güvenlik, yöntem, kaynaklar */
+.notlar { padding-top: 6px; }
+.notlar dl { margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px 22px; }
+.notlar dt { font-weight: 800; color: var(--hardal); }
+.notlar dd { margin: 2px 0 0; color: var(--tas); font-size: 15px; }
+.notlar dl > div { min-width: 0; }
+.guvenlik { border: 1px solid var(--pas); border-radius: 3px; padding: 12px 16px; background: rgba(181, 68, 42, .1); }
+.guvenlik p { margin: 0; max-width: 70ch; }
+.yontem ul { margin: 0 14px 14px; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 15px; color: var(--tas); max-width: 75ch; }
+.yontem b { color: var(--kagit); }
+.kaynaklar { border-top: 1px solid var(--gece4); padding-top: 14px; font-size: 13px; color: var(--soluk); }
+.kaynaklar h2 { font-size: 15px; }
+.kaynaklar p { margin: 0 0 8px; max-width: 95ch; }
+
+/* gömülü (kafaharitasi.com bölüm sayfasında, iFrame 1060 px) */
+.gomulu .bas-alan, .gomulu .notlar, .gomulu .yontem, .gomulu .kaynaklar, .gomulu .guvenlik, .gomulu .kart .soluk.aciklama { display: none; }
+.gomulu .sayfa { padding-block: 6px 12px; gap: 10px; }
+.gomulu .tam-sayfa { display: inline-flex; }
+.gomulu #harita { height: 430px; }
+.gomulu .guvenlik { padding: 9px 12px; font-size: 14px; }
+.gomulu .guvenlik h2 { display: none; }
+
+@media (max-width: 600px) {
+  body { font-size: 15px; }
+  .giris { font-size: 16px; }
+  #harita { height: 340px; }
+  .gomulu #harita { height: 270px; }
+  .gomulu .kart { gap: 4px; padding: 10px 12px; }
+  .gomulu .kart-dug, .gomulu .ipucu { display: none; }
+  .gomulu .il-sec label { display: none; }
+  .gomulu .kart li { font-size: 14px; }
+  .gomulu .kart h3 { font-size: 20px; }
+  .ipucu { flex-basis: 100%; order: 3; }
+  .dugme { flex: 1 1 auto; justify-content: center; }
+  .lejant { font-size: 11px; padding: 5px 7px; }
+  .rampa i { width: 74px; }
+  .kart { padding: 12px 13px; }
+  .liste th:nth-child(4), .liste td:nth-child(4) { display: none; }
+  .gomulu .tam-sayfa { margin-left: 0; }
+}
